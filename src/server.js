@@ -12,18 +12,30 @@ const app = express();
 //자신의 다음 callboack을 가리키게됨. 이때 return 하지 않고 next를 호출하는 함수를 middleware라고함.
 //return을 하게되면 controller가 됨
 
-const gossipMiddleware = (req, res, next) => {
-  console.log(req.url);
+const logger = (req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
   next(); //finalware 호출
 };
 
-app.get("/", gossipMiddleware, (req, res) => {
+const privateMiddleware = (req, res, next) => {
+  const url = req.url;
+  if (url === "/protected") {
+    return res.send("<h1>Not Allowed</h1>");
+  }
+  next();
+};
+
+// app.use는 global middleware를 만들어줌. 즉, 어떤 url이든 작동하는 middleware를 만들어준다.
+app.use(logger);
+app.use(privateMiddleware);
+
+app.get("/", (req, res) => {
   //return res.end(); //request를 종료시키는 함수
   return res.send("send you"); //request에 대하여 메시지를 보내는 함수
 });
 
-app.get("/login", (req, res) => {
-  return res.send("login you");
+app.get("/protected", (req, res) => {
+  return res.send("private lounge");
 });
 
 //서버를 외부에 개방
