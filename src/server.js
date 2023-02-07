@@ -1,41 +1,17 @@
 import express from "express";
+import morgan from "morgan";
 
 const PORT = 4000;
 
 //express 어플리케이션 생성
 const app = express();
+//응답의 method, url, 응답코드, 응답시간을 출력해주는 미들웨어
+const loggerMiddleware = morgan("dev");
 
-//서버를 외부에 개방하기전 서버 설정
-//루트 페이지로 get 요청이오면 call back 함수를 실행.
-//이때 콜백 함수는 2가지 인자 object를 받을 수 있는데 첫째는 req, 둘째는 res 객체임
-//call back 함수는 한가지 인자를 더 받는데 그것은 next라는 인자임 next는 여러 call back을 받았을때
-//자신의 다음 callboack을 가리키게됨. 이때 return 하지 않고 next를 호출하는 함수를 middleware라고함.
-//return을 하게되면 controller가 됨
-
-const logger = (req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
-  next(); //finalware 호출
-};
-
-const privateMiddleware = (req, res, next) => {
-  const url = req.url;
-  if (url === "/protected") {
-    return res.send("<h1>Not Allowed</h1>");
-  }
-  next();
-};
-
-// app.use는 global middleware를 만들어줌. 즉, 어떤 url이든 작동하는 middleware를 만들어준다.
-app.use(logger);
-app.use(privateMiddleware);
-
+app.use(loggerMiddleware);
 app.get("/", (req, res) => {
   //return res.end(); //request를 종료시키는 함수
   return res.send("send you"); //request에 대하여 메시지를 보내는 함수
-});
-
-app.get("/protected", (req, res) => {
-  return res.send("private lounge");
 });
 
 //서버를 외부에 개방
