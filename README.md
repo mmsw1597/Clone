@@ -1,15 +1,31 @@
 # Clone
 
+## Home
+
 / -> Home
+
 /join -> Join
+
 /login -> Login
+
 /search -> Search
 
+## User
+
+/users/:id -> See User
+
+/users/logout -> Logout
+
 /users/edit -> Edit Profile
+
 /users/delete -> Delete Profile
 
-/videos/watch -> Wathc Video
-/videos/edit -> Edit Video
-/videos/delete -> Delete video
-/videos/comments -> Comment on a video
-/videos/comments/delete -> Delete A comment of a video
+## Video
+
+/videos/:id -> Watch Video
+
+/videos/:id/edit -> Edit Video
+
+/videos/:id/delete -> Delete video
+
+/videos/upload -> Upload Video
