@@ -10,6 +10,12 @@ const PORT = 4000;
 const app = express();
 //응답의 method, url, 응답코드, 응답시간을 출력해주는 미들웨어
 const loggerMiddleware = morgan("dev");
+
+//view engine을 pug로 설정
+app.set("view engine", "pug");
+//views 디렉토리 경로 재설정
+app.set("views", process.cwd() + "/src/views");
+
 app.use(loggerMiddleware);
 //Router
 app.use("/", globalRouter);
