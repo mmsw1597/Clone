@@ -39,6 +39,12 @@ export const getEdit = (req, res) => {
   return res.render("edit", { pageTitle: `Edit ${video.title}`, video });
 };
 export const postEdit = (req, res) => {
-  return res.end();
+  const { id } = req.params;
+  const { title } = req.body;
+  videos[id].title = title;
+  return res.redirect(`/videos/${id}`);
 };
 //export default는 하나밖에 export하지 못함
+//redirect는 특정 url로 이동하게끔 하도록 함
+//express가 form을 이해할 수 있도록 서버 설정이 필요함
+//서버 설정 후 body를 통해 form의 name은 key, value는 value로 받아올 수 있음
