@@ -1,13 +1,12 @@
 import express from "express";
 import { join, login } from "../controllers/userController";
-import { trending, search } from "../controllers/videoController";
+import { trending } from "../controllers/videoController";
 
 const globalRouter = express.Router();
 
 globalRouter.get("/", trending);
 globalRouter.get("/join", join);
 globalRouter.get("/login", login);
-globalRouter.get("serarch", search);
 
 //export
 //default export 를 사용하여 다른 곳에서 import할때 다른 변수 이름을 사용가능
