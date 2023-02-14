@@ -1,5 +1,5 @@
 import express from "express";
-import { see, edit, upload, deleteVideo } from "../controllers/videoController";
+import { watch, getEdit, postEdit } from "../controllers/videoController";
 
 const videoRouter = express.Router();
 
@@ -8,9 +8,8 @@ const videoRouter = express.Router();
 //순서가 중요함 변수 파라미터가 upload url 위로 오면 아래에 있는 upload URL로 갈때 upload 문자열 자체를 id로 받아버림
 //정규표현식을 통해 id가 무조건 숫자임을 명시하면 순서를 바꿔도 상관없음
 //옆에 id를 붙인이유는 파라미터를 변수로 불러와야 하기 때문. 그래서 id라는 이름을 붙여줌
-videoRouter.get("/upload", upload);
-videoRouter.get("/:id(\\d+)", see);
-videoRouter.get("/:id(\\d+)/edit", edit);
-videoRouter.get("/:id(\\d+)/delete", deleteVideo);
+videoRouter.get("/:id(\\d+)", watch);
+//하나의 url에 get, post 방식을 쓰도록 할때 유용함
+videoRouter.route("/:id(\\d+)/edit").get(getEdit).post(postEdit);
 
 export default videoRouter;

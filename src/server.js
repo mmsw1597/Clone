@@ -16,7 +16,12 @@ app.set("view engine", "pug");
 //views 디렉토리 경로 재설정
 app.set("views", process.cwd() + "/src/views");
 
+//미들웨어
 app.use(loggerMiddleware);
+//express가 form의 value들을 이해할 수 있도록 함
+//value(body)를 보기 좋게 해줌
+app.use(express.urlencoded({ extended: true }));
+
 //Router
 app.use("/", globalRouter);
 app.use("/videos", videoRouter);
