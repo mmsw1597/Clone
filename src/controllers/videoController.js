@@ -1,47 +1,29 @@
-const videos = [
-  {
-    title: "Hello1",
-    rating: 5,
-    comments: 2,
-    createdAt: "A",
-    views: 59,
-    id: 0,
-  },
-  {
-    title: "Hello2",
-    rating: 5,
-    comments: 2,
-    createdAt: "2분전",
-    views: 59,
-    id: 1,
-  },
-  {
-    title: "Hello3",
-    rating: 5,
-    comments: 2,
-    createdAt: "2분전",
-    views: 59,
-    id: 2,
-  },
-];
+import Video from "../models/Video";
 
-export const trending = (req, res) => {
+//async await으로 데이터 찾기
+//call back 방식과 다르게 JS가 await 구문을 기다리게끔 한다.
+//call back의 경우는 JS가 call back 함수를 뒤로 미루고 아래 코드로 이동했음
+//async await은 await 구문이 끝나야지만 아래 코드를 수행함
+//즉, 코드 순서와 JS의 동작 순서가 같아짐
+//단, 콜백의 경우 error 매개변수를 갖기 때문에 단순 if문으로 error 발생 여부를 확인할 수 있지만
+//async await의 경우는 error 매개변수가 없기 때문에 try catch문을 사용해야함
+
+export const home = async (req, res) => {
+  const videos = await Video.find({});
+  console.log(videos);
   return res.render("home", { pageTitle: "Home", videos });
 };
 export const watch = (req, res) => {
   const { id } = req.params;
-  const video = videos[id];
-  return res.render("watch", { pageTitle: `Watch ${video.title}`, video });
+  return res.render("watch", { pageTitle: `Watch` });
 };
 export const getEdit = (req, res) => {
   const { id } = req.params;
-  const video = videos[id];
-  return res.render("edit", { pageTitle: `Edit ${video.title}`, video });
+  return res.render("edit", { pageTitle: `Edit` });
 };
 export const postEdit = (req, res) => {
   const { id } = req.params;
   const { title } = req.body;
-  videos[id].title = title;
   return res.redirect(`/videos/${id}`);
 };
 export const getUpload = (req, res) => {
@@ -50,14 +32,6 @@ export const getUpload = (req, res) => {
 export const postUpload = (req, res) => {
   //비디오를 비디오 배열에 추가할 예정
   const { title } = req.body;
-  const newVideo = {
-    title,
-    rating: 0,
-    comments: 0,
-    createdAt: "now",
-    views: 0,
-    id: videos.length,
-  };
   videos.push(newVideo);
   //1. post request를 받을 컨트롤러임.
   //2. redirect를 하여 브라우저에게 홈페이지로 가도록 할 예정. 이때 브라우저는 총 2번의 url을 통과하게 될거임. 하나는 upload 하나는 홈페이지
