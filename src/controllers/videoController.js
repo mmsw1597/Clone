@@ -1,13 +1,17 @@
 import Video from "../models/Video";
 
-export const home = (req, res) => {
-  //call back 방식으로 데이터 찾기
-  //첫번째 인자는 search term이다. 비어있다면 모든 형태를 찾는다는 의미.
-  Video.find({}, (err, videos) => {
-    console.log("errors", err);
-    console.log("videos", videos);
-    return res.render("home", { pageTitle: "Home", videos });
-  });
+//async await으로 데이터 찾기
+//call back 방식과 다르게 JS가 await 구문을 기다리게끔 한다.
+//call back의 경우는 JS가 call back 함수를 뒤로 미루고 아래 코드로 이동했음
+//async await은 await 구문이 끝나야지만 아래 코드를 수행함
+//즉, 코드 순서와 JS의 동작 순서가 같아짐
+//단, 콜백의 경우 error 매개변수를 갖기 때문에 단순 if문으로 error 발생 여부를 확인할 수 있지만
+//async await의 경우는 error 매개변수가 없기 때문에 try catch문을 사용해야함
+
+export const home = async (req, res) => {
+  const videos = await Video.find({});
+  console.log(videos);
+  return res.render("home", { pageTitle: "Home", videos });
 };
 export const watch = (req, res) => {
   const { id } = req.params;
