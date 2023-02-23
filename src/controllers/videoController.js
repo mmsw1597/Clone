@@ -1,47 +1,25 @@
-const videos = [
-  {
-    title: "Hello1",
-    rating: 5,
-    comments: 2,
-    createdAt: "A",
-    views: 59,
-    id: 0,
-  },
-  {
-    title: "Hello2",
-    rating: 5,
-    comments: 2,
-    createdAt: "2분전",
-    views: 59,
-    id: 1,
-  },
-  {
-    title: "Hello3",
-    rating: 5,
-    comments: 2,
-    createdAt: "2분전",
-    views: 59,
-    id: 2,
-  },
-];
+import Video from "../models/Video";
 
-export const trending = (req, res) => {
-  return res.render("home", { pageTitle: "Home", videos });
+export const home = (req, res) => {
+  //call back 방식으로 데이터 찾기
+  //첫번째 인자는 search term이다. 비어있다면 모든 형태를 찾는다는 의미.
+  Video.find({}, (err, videos) => {
+    console.log("errors", err);
+    console.log("videos", videos);
+    return res.render("home", { pageTitle: "Home", videos });
+  });
 };
 export const watch = (req, res) => {
   const { id } = req.params;
-  const video = videos[id];
-  return res.render("watch", { pageTitle: `Watch ${video.title}`, video });
+  return res.render("watch", { pageTitle: `Watch` });
 };
 export const getEdit = (req, res) => {
   const { id } = req.params;
-  const video = videos[id];
-  return res.render("edit", { pageTitle: `Edit ${video.title}`, video });
+  return res.render("edit", { pageTitle: `Edit` });
 };
 export const postEdit = (req, res) => {
   const { id } = req.params;
   const { title } = req.body;
-  videos[id].title = title;
   return res.redirect(`/videos/${id}`);
 };
 export const getUpload = (req, res) => {
@@ -50,14 +28,6 @@ export const getUpload = (req, res) => {
 export const postUpload = (req, res) => {
   //비디오를 비디오 배열에 추가할 예정
   const { title } = req.body;
-  const newVideo = {
-    title,
-    rating: 0,
-    comments: 0,
-    createdAt: "now",
-    views: 0,
-    id: videos.length,
-  };
   videos.push(newVideo);
   //1. post request를 받을 컨트롤러임.
   //2. redirect를 하여 브라우저에게 홈페이지로 가도록 할 예정. 이때 브라우저는 총 2번의 url을 통과하게 될거임. 하나는 upload 하나는 홈페이지
