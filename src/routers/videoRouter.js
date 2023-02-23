@@ -1,5 +1,11 @@
 import express from "express";
-import { watch, getEdit, postEdit } from "../controllers/videoController";
+import {
+  watch,
+  getEdit,
+  postEdit,
+  getUpload,
+  postUpload,
+} from "../controllers/videoController";
 
 const videoRouter = express.Router();
 
@@ -11,5 +17,7 @@ const videoRouter = express.Router();
 videoRouter.get("/:id(\\d+)", watch);
 //하나의 url에 get, post 방식을 쓰도록 할때 유용함
 videoRouter.route("/:id(\\d+)/edit").get(getEdit).post(postEdit);
+videoRouter.get("/upload", getUpload);
+videoRouter.post("/upload", postUpload);
 
 export default videoRouter;

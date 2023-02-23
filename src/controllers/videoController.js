@@ -44,6 +44,13 @@ export const postEdit = (req, res) => {
   videos[id].title = title;
   return res.redirect(`/videos/${id}`);
 };
+export const getUpload = (req, res) => {
+  return res.render("upload", { pageTitle: "Upload Video" });
+};
+export const postUpload = (req, res) => {
+  //비디오를 비디오 배열에 추가할 예정
+  return res.redirect("/");
+};
 //export default는 하나밖에 export하지 못함
 //redirect는 특정 url로 이동하게끔 하도록 함
 //express가 form을 이해할 수 있도록 서버 설정이 필요함
