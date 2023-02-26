@@ -9,7 +9,7 @@ import Video from "../models/Video";
 //async await의 경우는 error 매개변수가 없기 때문에 try catch문을 사용해야함
 
 export const home = async (req, res) => {
-  const videos = await Video.find({});
+  const videos = await Video.find({}).sort({ createdAt: "desc" });
   console.log(videos);
   return res.render("home", { pageTitle: "Home", videos });
 };
@@ -73,6 +73,18 @@ export const deleteVideo = async (req, res) => {
 
   return res.redirect("/");
 };
+
+export const search = async (req, res) => {
+  const { keyword } = req.query; //유저가 맨 처음 검색 페이지에 도달했을땐 keyword는 undefined임!
+  let videos = [];
+  if (keyword) {
+    videos = await Video.find({
+      title: keyword,
+    });
+  }
+  return res.render("search", { pageTitle: "Search Video", videos });
+};
+
 //export default는 하나밖에 export하지 못함
 //redirect는 특정 url로 이동하게끔 하도록 함
 //express가 form을 이해할 수 있도록 서버 설정이 필요함
