@@ -1,10 +1,12 @@
 extends base.pug
 
 block content 
-  h4 Change Title of video
+  h4 Update Video
   //- action : 데이터를 어디로 보낼건지 명시
   //- 현재 url에 같은 곳으로 보낸다면 action을 명시 안해도 됨
   //- form의 method가 get인 경우 form에 있는 정보가 url에 들어감 -> 검색을 구현할때 주로 사용
   form(method="POST")
-    input(name = "title", placeholder="Video Title", value=video.title, required)
+    input(name = "title", placeholder="Video Title", value=video.title, required, maxlength=100)
+    input(placeholder="Description", required, type="text", name="description", value=video.description)
+    input(placeholder="Hashtags, separated by comma", required, type="text", name="hashtags", value=video.hashtags.join())
     input(value="Save", type="submit")

@@ -9,35 +9,84 @@ import Video from "../models/Video";
 //async await의 경우는 error 매개변수가 없기 때문에 try catch문을 사용해야함
 
 export const home = async (req, res) => {
-  const videos = await Video.find({});
+  const videos = await Video.find({}).sort({ createdAt: "desc" });
   console.log(videos);
   return res.render("home", { pageTitle: "Home", videos });
 };
-export const watch = (req, res) => {
+export const watch = async (req, res) => {
   const { id } = req.params;
-  return res.render("watch", { pageTitle: `Watch` });
+  const video = await Video.findById(id);
+  if (!video) {
+    return res.render("404", { pageTitle: "Video Not Found" });
+  }
+  return res.render("watch", { pageTitle: video.title, video });
 };
-export const getEdit = (req, res) => {
+export const getEdit = async (req, res) => {
   const { id } = req.params;
-  return res.render("edit", { pageTitle: `Edit` });
+  const video = await Video.findById(id);
+  if (!video) {
+    return res.render("404", { pageTitle: "Video Not Found" });
+  }
+  return res.render("edit", { pageTitle: `Edit ${video.title}`, video });
 };
-export const postEdit = (req, res) => {
+export const postEdit = async (req, res) => {
   const { id } = req.params;
-  const { title } = req.body;
+  const { title, description, hashtags } = req.body;
+  const video = await Video.exists({ _id: id });
+  if (!video) {
+    return res.render("404", { pageTitle: "Video Not Found" });
+  }
+  await Video.findByIdAndUpdate(id, {
+    title,
+    description,
+    hashtags: Video.formatHashtags(hashtags),
+  });
   return res.redirect(`/videos/${id}`);
 };
 export const getUpload = (req, res) => {
   return res.render("upload", { pageTitle: "Upload Video" });
 };
-export const postUpload = (req, res) => {
+export const postUpload = async (req, res) => {
   //비디오를 비디오 배열에 추가할 예정
-  const { title } = req.body;
-  videos.push(newVideo);
+  const { title, description, hashtags } = req.body;
+  try {
+    await Video.create({
+      title,
+      description,
+      hashtags: Video.formatHashtags(hashtags),
+    });
+    return res.redirect("/");
+  } catch (error) {
+    return res.render("upload", {
+      pageTitle: "Upload Video",
+      errorMessage: error._message,
+    });
+  }
   //1. post request를 받을 컨트롤러임.
   //2. redirect를 하여 브라우저에게 홈페이지로 가도록 할 예정. 이때 브라우저는 총 2번의 url을 통과하게 될거임. 하나는 upload 하나는 홈페이지
   //3. request의 body를 통해 input값을 받아올 수 있음. 이때 input은 반드시 name 속성 값을 명시해야 됨.
+};
+
+export const deleteVideo = async (req, res) => {
+  const { id } = req.params;
+  await Video.findByIdAndDelete(id);
+
   return res.redirect("/");
 };
+
+export const search = async (req, res) => {
+  const { keyword } = req.query; //유저가 맨 처음 검색 페이지에 도달했을땐 keyword는 undefined임!
+  let videos = [];
+  if (keyword) {
+    videos = await Video.find({
+      title: {
+        $regex: new RegExp(keyword, "ig"),
+      },
+    });
+  }
+  return res.render("search", { pageTitle: "Search Video", videos });
+};
+
 //export default는 하나밖에 export하지 못함
 //redirect는 특정 url로 이동하게끔 하도록 함
 //express가 form을 이해할 수 있도록 서버 설정이 필요함
