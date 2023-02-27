@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
@@ -6,6 +7,12 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   name: { type: String, required: true },
   location: String,
+});
+
+//유저 정보를 저장하기 전, 패스워드를 해싱
+//hash의 두번째 매개변수는 해쉬를 몇번 반복하는지 횟수를 가리킴
+userSchema.pre("save", async function () {
+  this.password = await bcrypt.hash(this.password, 5);
 });
 
 const User = mongoose.model("user", userSchema);
