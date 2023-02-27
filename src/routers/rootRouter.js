@@ -1,13 +1,13 @@
 import express from "express";
-import { join, login } from "../controllers/userController";
+import { getJoin, login, postJoin } from "../controllers/userController";
 import { home, search } from "../controllers/videoController";
 
-const globalRouter = express.Router();
+const rootRouter = express.Router();
 
-globalRouter.get("/", home);
-globalRouter.get("/join", join);
-globalRouter.get("/login", login);
-globalRouter.get("/search", search);
+rootRouter.get("/", home);
+rootRouter.route("/join").get(getJoin).post(postJoin);
+rootRouter.get("/login", login);
+rootRouter.get("/search", search);
 
 //export
 //default export 를 사용하여 다른 곳에서 import할때 다른 변수 이름을 사용가능
@@ -15,4 +15,4 @@ globalRouter.get("/search", search);
 //default export는 한개밖에 export하지 못함
 //non-default export를 사용하여 여러개를 export할 수 있음
 //이때 import 하는 곳에선 오브젝트로 해당 export 모듈을 받을 수 있음
-export default globalRouter;
+export default rootRouter;
