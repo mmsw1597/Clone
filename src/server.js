@@ -1,8 +1,10 @@
 import express from "express";
 import morgan from "morgan";
+import session from "express-session";
 import globalRouter from "./routers/rootRouter";
 import videoRouter from "./routers/videoRouter";
 import userRouter from "./routers/userRouter";
+import { localsMiddleware } from "./middlewares";
 
 //express 어플리케이션 생성
 const app = express();
@@ -20,7 +22,15 @@ app.use(loggerMiddleware);
 //value(body)를 보기 좋게 해줌
 app.use(express.urlencoded({ extended: true }));
 
+app.use(
+  session({
+    secret: "Hello",
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 //Router
+app.use(localsMiddleware);
 app.use("/", globalRouter);
 app.use("/videos", videoRouter);
 app.use("/users", userRouter);
