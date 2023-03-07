@@ -4,9 +4,10 @@ import bcrypt from "bcrypt";
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+  password: { type: String },
   name: { type: String, required: true },
   location: String,
+  socialOnly: { type: Boolean, default: false },
 });
 
 //유저 정보를 저장하기 전, 패스워드를 해싱

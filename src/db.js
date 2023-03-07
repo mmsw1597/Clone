@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 //경고 처리
 mongoose.set("strictQuery", true);
 //mongoose를 통해 mongoDB와 연결.
-mongoose.connect("mongodb://127.0.0.1:27017/wetube");
+mongoose.connect(process.env.DB_URL);
 
 const db = mongoose.connection;
 
