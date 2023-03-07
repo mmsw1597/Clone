@@ -60,6 +60,7 @@ export const postLogin = async (req, res) => {
       errorMessage: "비밀번호가 일치하지 않습니다.",
     });
   }
+  //세션 수정
   req.session.loggedIn = true;
   req.session.user = user;
 
